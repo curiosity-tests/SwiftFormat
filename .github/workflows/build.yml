@@ -28,14 +28,14 @@ permissions:
 env:
   # The one variable that separates the arms: on baseline, action-checkout
   # skips its Set up Chalk step entirely.
-  CHALK_ON: ${{ github.event_name == 'workflow_dispatch' && inputs.leg != 'baseline' }}
+  CHALK_ON: ${{ inputs.leg == 'instrumented' }}
 
 run-name: "build ${{ inputs.leg || 'push' }} ${{ inputs.racecar_run }}"
 
 jobs:
   check-for-changes:
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' || github.event.pull_request.changed_files > 0
+    if: ${{ 'push' != 'pull_request' || github.event.pull_request.changed_files > 0 }}
     steps:
       - run: echo "PR has changes, proceeding with build jobs"
 
